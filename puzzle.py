@@ -39,3 +39,14 @@ def reconstruct_path(parent, state):
 
     path.reverse()
     return path
+
+def is_solvable(state):
+    nums = [x for x in state if x != 0]
+    inversions = 0
+
+    for i in range(len(nums)):
+        for j in range(i + 1, len(nums)):
+            if nums[i] > nums[j]:
+                inversions += 1
+
+    return inversions % 2 == 0

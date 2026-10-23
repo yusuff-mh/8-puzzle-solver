@@ -3,6 +3,9 @@ from puzzle import *
 
 
 def bfs(state):
+    if not is_solvable(state):
+        return None, 0, 0, 0
+
     # BFS explores states level by level using a queue
     frontier = deque([state])
 
@@ -10,11 +13,7 @@ def bfs(state):
     # The initial state has no parent
     parent = {tuple(state): None}
 
-    # Store the depth of each node
-    depths = {tuple(state): 0}
-
     expanded_counter = 0
-    max_depth_reached = 0
     directions = ["Up", "Down", "Left", "Right"]
 
     while frontier:
@@ -22,16 +21,11 @@ def bfs(state):
         current = frontier.popleft()
 
         current_tuple = tuple(current)
-        current_depth = depths[current_tuple]
-
-        # Update the maximum depth
-        if current_depth > max_depth_reached:
-            max_depth_reached = current_depth
 
         # Stop when the goal state is reached
         if is_goal(current):
             path = reconstruct_path(parent, current)
-            return path, expanded_counter, len(path), max_depth_reached
+            return path, expanded_counter, len(path), len(path)
 
         expanded_counter += 1
         # Generate all valid neighbouring states
@@ -42,14 +36,14 @@ def bfs(state):
             # Add only states that have not been discovered before
             if key not in parent:
                 parent[key] = (current_tuple, direction)
-                depths[key] = current_depth + 1
                 frontier.append(neighbour)
-
-    # Return None if no solution is found
-    return None, expanded_counter, 0, max_depth_reached
 
 
 def dfs(state):
+    if not is_solvable(state):
+        return None, 0, 0, 0
+
+
     # DFS uses a stack to explore one branch deeply before backtracking
     frontier = [state]
 
@@ -86,8 +80,6 @@ def dfs(state):
                 parent[key] = (current_tuple, direction)
                 depths[key] = current_depth + 1
                 frontier.append(neighbour)
-
-    return None, expanded_counter, 0, max_depth_reached
 
 def dls(start, limit):
     # Convert the initial state to a tuple to use it as a dictionary key
@@ -154,10 +146,11 @@ def dls(start, limit):
     return None, expanded_count
 
 def ids(state):
+    if not is_solvable(state):
+        return None, 0, 0, 0
+    
     limit = 0
     total_expanded = 0
-    # Store the expanded count for the previous iteration
-    prev_expanded_count = -1
 
     while True:
         path, expanded_count = dls(state, limit)
@@ -168,12 +161,6 @@ def ids(state):
         # Return when a solution is found
         if path is not None:
             return path, total_expanded, len(path), limit
-
-        # if the maximum depth has reached, the search failed
-        if expanded_count == prev_expanded_count:
-            return None, total_expanded, 0, limit
-
-        prev_expanded_count = expanded_count
 
         # Increase the maximum allowed depth and search again
         limit += 1
