@@ -32,13 +32,14 @@ def reconstruct_path(parent, state):
     key = tuple(state)
 
     # Trace back from the goal to the start
-    while parent[key] is not None:
+    while parent[key] is not None and parent[key] != (None, None):
         previous, direction = parent[key]
         path.append(direction)
         key = previous
 
     path.reverse()
     return path
+
 
 def is_solvable(state):
     nums = [x for x in state if x != 0]

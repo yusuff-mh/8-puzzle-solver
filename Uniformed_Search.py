@@ -1,7 +1,6 @@
 from collections import deque
 from puzzle import *
 
-
 def bfs(state):
     if not is_solvable(state):
         return None, 0, 0, 0
@@ -37,7 +36,6 @@ def bfs(state):
             if key not in parent:
                 parent[key] = (current_tuple, direction)
                 frontier.append(neighbour)
-
 
 def dfs(state):
     if not is_solvable(state):
