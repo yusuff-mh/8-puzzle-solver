@@ -119,7 +119,7 @@ def dls(start, limit):
             neighbour = find_neighbour(current, direction)
 
             # Skip invalid moves
-            if neighbour is None:
+            if neighbour == current:
                 continue
 
             key = tuple(neighbour)
